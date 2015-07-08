@@ -1,12 +1,15 @@
 {
-    "name": "optimus/laravel-boilerplate",
+    "name": "optimus/fineuploader-server-thumbnail-creator",
     "autoload": {
         "psr-4": {
-            "Optimus\\LaravelBoilerplate\\": "src/"
+            "Optimus\\FineuploaderServer\\Middleware\\": "src/"
         }
     },
     "require": {
-        "laravel/framework": "~5.1"
+        "laravel/framework": "~5.1",
+        "intervention/image": "~2.3",
+        "optimus/fineuploader-server": "0.1.*",
+        "optimus/onion": "0.1.*"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",
