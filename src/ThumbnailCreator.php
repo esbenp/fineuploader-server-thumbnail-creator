@@ -4,6 +4,7 @@ namespace Optimus\FineuploaderServer\Middleware;
 
 use Closure;
 use Intervention\Image\ImageManager;
+use Optimus\FineuploaderServer\Config\Config;
 use Optimus\FineuploaderServer\File\Edition;
 use Optimus\FineuploaderServer\Middleware\Naming\ThumbnailSuffixStrategy;
 use Optimus\Onion\LayerInterface;
@@ -14,18 +15,33 @@ class ThumbnailCreator implements LayerInterface {
 
     private $config;
 
+    private $uploaderConfig;
+
     private $imageManager;
 
-    public function __construct(array $config = [])
+    private $merged = false;
+
+    public function __construct(array $config = [], Config $uploaderConfig)
     {
-        $this->config = $this->mergeConfigWithDefault($config);
-        $this->imageManager = new ImageManager([
-            'driver' => $this->config['driver']
-        ]);
+        $this->config = $config;
+        $this->uploaderConfig = $uploaderConfig;
     }
 
     public function peel($object, Closure $next)
     {
+        // We lazy merge the config, so we get the stuff from request input
+        // (thumbnail dimensions)
+        // TODO: Refactor. Merge request input in service provider?
+        if ($this->merged === false) {
+            $this->config = $this->mergeConfigWithDefault($this->config);
+
+            $this->imageManager = new ImageManager([
+                'driver' => $this->config['driver']
+            ]);
+
+            $this->merged = true;
+        }
+
         if ($object->getType() !== 'image') {
             return $next($object);
         }
@@ -87,9 +103,9 @@ class ThumbnailCreator implements LayerInterface {
         return array_merge([
             'anchor' => 'center',
             'driver' => 'imagick',
-            'height' => 100,
+            'height' => $this->uploaderConfig->get('thumbnails.height'),
             'method' => 'fit',
-            'width' => 100
+            'width' => $this->uploaderConfig->get('thumbnails.width')
         ], $config);
     }
 
