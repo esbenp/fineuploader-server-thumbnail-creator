@@ -8,7 +8,7 @@
     "require": {
         "laravel/framework": "~5.1",
         "intervention/image": "~2.3",
-        "optimus/fineuploader-server": "0.1.*",
+        "optimus/fineuploader-server": "0.2.*",
         "optimus/onion": "0.1.*"
     },
     "require-dev": {
