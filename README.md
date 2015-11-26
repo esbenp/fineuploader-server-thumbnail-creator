@@ -5,5 +5,5 @@
 ## Installation
 
 ```bash
-composer require fineuploader-server-thumbnail-creator 0.1.*
+composer require optimus/fineuploader-server-thumbnail-creator 0.1.*
 ```
